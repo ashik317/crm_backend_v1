@@ -135,3 +135,29 @@ def create_budget_planner(sender, instance, created, **kwargs):
     if created:
         BudgetPlanner = apps.get_model("case", "BudgetPlanner")
         BudgetPlanner.objects.create(case=instance)
+
+# Mortgage Needs signal.
+@receiver(post_save, sender="case.Case")
+def create_mortgage_needs(sender, instance, created, **kwargs):
+    if created:
+        MortgageNeeds = apps.get_model("case", "MortgageNeeds")
+        MortgageNeeds.objects.create(case=instance)
+
+# MortgageFeatures signal.
+@receiver(post_save, sender="case.Case")
+def create_mortgage_features_for_lead(sender, instance, created, **kwargs):
+    if created:
+        MortgageFeatures = apps.get_model("case", "MortgageFeatures")
+        MortgageFeatures.objects.create(
+            case=instance,
+            applicant=instance.lead,
+        )
+
+# @receiver(post_save, sender="case.JointUser")
+# def create_mortgage_features_for_joint_user(sender, instance, created, **kwargs):
+#     if created:
+#         MortgageFeatures = apps.get_model("case", "MortgageFeatures")
+#         MortgageFeatures.objects.create(
+#             case=instance.case,
+#             applicant=instance.joint_user,
+#         )

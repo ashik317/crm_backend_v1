@@ -108,6 +108,7 @@ from .signals import (
     create_adverse_for_joint_user,
     create_property_details,
     create_budget_planner,
+    create_mortgage_needs, create_mortgage_features_for_lead,
 )
 from .utils import upload_to_case_files
 
@@ -1863,6 +1864,9 @@ class MortgageFeatures(CreatedAtUpdatedAtBaseModel):
     case = models.ForeignKey(
         Case, on_delete=models.CASCADE, related_name="mortgage_features"
     )
+    applicant = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="applicant_mortgage_features"
+    )
     life_cover = models.BooleanField(default=False)
     critical_illness = models.BooleanField(default=False)
     income_protection = models.BooleanField(default=False)
@@ -1888,3 +1892,5 @@ post_save.connect(create_adverse_for_lead, sender=Case)
 post_save.connect(create_adverse_for_joint_user, sender=JointUser)
 post_save.connect(create_property_details, sender=Case)
 post_save.connect(create_budget_planner, sender=Case)
+post_save.connect(create_mortgage_needs, sender=Case)
+post_save.connect(create_mortgage_features_for_lead, sender=Case)
